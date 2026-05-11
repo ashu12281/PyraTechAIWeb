@@ -402,52 +402,6 @@
     }
     .arrow-col svg { color: rgba(255,107,53,.38); width: 44px; flex-shrink: 0; }
 
-    /* ── SOCIAL PROOF ────────────────────────────────────── */
-    #social {
-      padding: 64px var(--pad);
-      background: var(--bg-elev);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .trusted-lbl {
-      text-align: center; font-size: .72rem; letter-spacing: 2.5px;
-      text-transform: uppercase; color: var(--subtle); margin-bottom: 30px;
-    }
-
-    .partner-row {
-      display: flex; align-items: center; justify-content: center;
-      gap: 44px; flex-wrap: wrap;
-    }
-    .partner {
-      display: flex; align-items: center; gap: 9px;
-      color: rgba(255,255,255,.25); font-size: .88rem; font-weight: 600;
-      transition: color var(--ease);
-    }
-    .partner:hover { color: rgba(255,255,255,.55); }
-    .partner-ico {
-      width: 30px; height: 30px; border-radius: 6px;
-      background: rgba(255,255,255,.05);
-      display: flex; align-items: center; justify-content: center;
-      font-size: .95rem;
-    }
-
-    .testi-grid {
-      display: grid; grid-template-columns: repeat(3,1fr); gap: 18px;
-      margin-top: 44px;
-    }
-    .testi {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--r); padding: 22px 24px;
-    }
-    .testi-q {
-      font-size: .875rem; color: var(--muted); line-height: 1.7;
-      font-style: italic; margin-bottom: 14px;
-    }
-    .testi-name { font-size: .8rem; font-weight: 700; }
-    .testi-role { font-size: .74rem; color: var(--subtle); }
-    .testi-stars { color: var(--gold); font-size: .8rem; margin-bottom: 10px; }
-
     /* ── WAITLIST ────────────────────────────────────────── */
     #waitlist {
       padding: 96px var(--pad);
@@ -546,8 +500,6 @@
       #hbg { display: flex; }
 
       .cards { grid-template-columns: 1fr; }
-      .testi-grid { grid-template-columns: 1fr; }
-
       .steps {
         grid-template-columns: 1fr;
         max-width: 380px; margin: 0 auto;
@@ -557,7 +509,7 @@
     }
 
     @media (max-width: 600px) {
-      #hero, #features, #how, #social, #waitlist { padding-left: 20px; padding-right: 20px; }
+      #hero, #features, #how, #waitlist { padding-left: 20px; padding-right: 20px; }
       footer { padding: 22px 20px; flex-direction: column; text-align: center; }
       .hero-stats { gap: 0; }
       .hstat { padding: 0 20px; }
@@ -590,7 +542,6 @@
   <ul class="nav-links" role="list">
     <li><a href="#features">Features</a></li>
     <li><a href="#how">How It Works</a></li>
-    <li><a href="#social">Partners</a></li>
     <li><a href="#waitlist" class="nav-cta">Join Waitlist</a></li>
   </ul>
 
@@ -603,7 +554,6 @@
 <div id="mob-menu" role="navigation" aria-label="Mobile navigation">
   <a href="#features"  class="mob-link">Features</a>
   <a href="#how"       class="mob-link">How It Works</a>
-  <a href="#social"    class="mob-link">Early Partners</a>
   <a href="#waitlist"  class="mob-link nav-cta">🔥 Join the Waitlist</a>
 </div>
 
@@ -761,57 +711,6 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     SOCIAL PROOF
-     TODO: Replace placeholder companies and quotes with real ones
-════════════════════════════════════════════════════════════ -->
-<section id="social">
-  <p class="trusted-lbl reveal">Trusted by early design partners</p>
-
-  <div class="partner-row reveal d1">
-    <!-- TODO: Replace each partner with real company names and logos -->
-    <div class="partner"><div class="partner-ico">🏢</div>Acme Analytics</div>
-    <div class="partner"><div class="partner-ico">📊</div>DataForge Co.</div>
-    <div class="partner"><div class="partner-ico">🚀</div>StratosBI</div>
-    <div class="partner"><div class="partner-ico">💡</div>Insight Labs</div>
-    <div class="partner"><div class="partner-ico">⚙️</div>MetricHive</div>
-  </div>
-
-  <div class="testi-grid">
-    <!-- TODO: Replace placeholder quotes with real testimonials from beta testers -->
-    <div class="testi reveal">
-      <div class="testi-stars" aria-label="5 stars">★★★★★</div>
-      <p class="testi-q">
-        "PyraTechAI cut our semantic model build from two weeks to an afternoon.
-        The agent found three missing joins we'd overlooked for months."
-      </p>
-      <!-- TODO: Replace name and role -->
-      <div class="testi-name">Alex M.</div>
-      <div class="testi-role">Head of Analytics, Acme Analytics</div>
-    </div>
-    <div class="testi reveal d1">
-      <div class="testi-stars" aria-label="5 stars">★★★★★</div>
-      <p class="testi-q">
-        "Finally a tool that speaks both Snowflake and Databricks fluently.
-        The YAML output was deploy-ready on the very first try."
-      </p>
-      <!-- TODO: Replace name and role -->
-      <div class="testi-name">Jordan K.</div>
-      <div class="testi-role">Data Platform Lead, DataForge Co.</div>
-    </div>
-    <div class="testi reveal d2">
-      <div class="testi-stars" aria-label="5 stars">★★★★★</div>
-      <p class="testi-q">
-        "The knowledge-graph view alone is worth it. We finally have a visual map
-        of every relationship in our warehouse."
-      </p>
-      <!-- TODO: Replace name and role -->
-      <div class="testi-name">Sam R.</div>
-      <div class="testi-role">Analytics Engineer, StratosBI</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════
      WAITLIST
 ════════════════════════════════════════════════════════════ -->
 <section id="waitlist">
@@ -850,6 +749,7 @@
       <form class="wl-form" id="wl-form" novalidate>
         <input
           id="wl-email"
+          name="email"
           class="wl-input"
           type="email"
           placeholder="you@company.com"
@@ -997,32 +897,50 @@
   );
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  /* ── Waitlist form (fallback) ─────────────────────────────── */
-  /* TODO: Remove this entire block once you've replaced #tally-form with the real Tally embed */
+  /* ── Waitlist form → Formspree ──────────────────────────────
+     Setup (one-time, ~2 min):
+       1. Go to formspree.io → Sign up free
+       2. New Form → name it "PyraTechAI Waitlist"
+       3. Set notification email to hello@pyratechai.com
+       4. Copy your Form ID (e.g. "xabcd123")
+       5. Replace YOUR_FORMSPREE_ID below with that ID
+  ─────────────────────────────────────────────────────────── */
+  const FORMSPREE_ID = 'YOUR_FORMSPREE_ID'; // ← paste your ID here
+
   const form = document.getElementById('wl-form');
   if (form) {
-    form.addEventListener('submit', e => {
+    form.addEventListener('submit', async e => {
       e.preventDefault();
       const email = document.getElementById('wl-email').value.trim();
       if (!email) return;
 
-      const btn = form.querySelector('button[type="submit"]');
-      btn.textContent    = '🎉 You\'re on the list!';
-      btn.style.background  = 'linear-gradient(135deg,#22c55e,#16a34a)';
-      btn.style.boxShadow   = '0 0 30px rgba(34,197,94,.4)';
-      btn.disabled          = true;
-      form.querySelector('input').disabled = true;
+      const btn   = form.querySelector('button[type="submit"]');
+      const input = form.querySelector('input');
 
-      /*
-       * TODO: Wire to your backend / Airtable / Mailchimp / etc.
-       * Example (uncomment and configure):
-       *
-       * fetch('/api/waitlist', {
-       *   method: 'POST',
-       *   headers: { 'Content-Type': 'application/json' },
-       *   body: JSON.stringify({ email })
-       * }).catch(console.error);
-       */
+      btn.textContent = 'Sending…';
+      btn.disabled    = true;
+      input.disabled  = true;
+
+      try {
+        const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body:    JSON.stringify({ email }),
+        });
+
+        if (res.ok) {
+          btn.textContent       = '🎉 You\'re on the list!';
+          btn.style.background  = 'linear-gradient(135deg,#22c55e,#16a34a)';
+          btn.style.boxShadow   = '0 0 30px rgba(34,197,94,.4)';
+        } else {
+          throw new Error('Formspree error');
+        }
+      } catch (_) {
+        btn.textContent  = 'Something went wrong — try again';
+        btn.style.background = 'linear-gradient(135deg,#ef4444,#dc2626)';
+        btn.disabled     = false;
+        input.disabled   = false;
+      }
     });
   }
 })();
