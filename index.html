@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyraTechAI — Forge Your Semantic Layer</title>
+  <meta name="description" content="Connect your schema. Our agentic AI discovers relationships, classifies metrics, and exports Snowflake/Databricks YAML in seconds." />
+  <!-- TODO: Add Tally embed script here when ready:
+       <script async src="https://tally.so/widgets/embed.js"></script> -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ── RESET & TOKENS ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0D0D0F;
+      --bg-elev:     #111114;
+      --bg-card:     #16161A;
+      --border:      rgba(255,255,255,0.07);
+      --orange:      #FF6B35;
+      --amber:       #F7931E;
+      --gold:        #FFD700;
+      --fire:        linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #FFD700 100%);
+      --text:        #FFFFFF;
+      --muted:       rgba(255,255,255,0.55);
+      --subtle:      rgba(255,255,255,0.3);
+      --r:           12px;
+      --r-lg:        20px;
+      --ease:        0.25s cubic-bezier(.4,0,.2,1);
+      --max:         1180px;
+      --pad:         max(24px, calc((100vw - var(--max)) / 2));
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 3px; }
+
+    /* ── UTILITIES ──────────────────────────────────────── */
+    .g-text {
+      background: var(--fire);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-label {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.7rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.12;
+      margin-bottom: 14px;
+    }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 560px;
+    }
+
+    .s-header { margin-bottom: 60px; }
+    .s-header.center { text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+    /* ── REVEAL ANIMATION ───────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .65s cubic-bezier(.4,0,.2,1), transform .65s cubic-bezier(.4,0,.2,1);
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: .1s; }
+    .d2 { transition-delay: .22s; }
+    .d3 { transition-delay: .34s; }
+
+    /* Hero entry animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .a0 { animation: fadeUp .7s .05s cubic-bezier(.4,0,.2,1) both; }
+    .a1 { animation: fadeUp .7s .18s cubic-bezier(.4,0,.2,1) both; }
+    .a2 { animation: fadeUp .7s .32s cubic-bezier(.4,0,.2,1) both; }
+    .a3 { animation: fadeUp .7s .48s cubic-bezier(.4,0,.2,1) both; }
+    .a4 { animation: fadeUp .7s .65s cubic-bezier(.4,0,.2,1) both; }
+
+    /* ── NOTIFICATION BAR ───────────────────────────────── */
+    #notif-bar {
+      position: relative;
+      z-index: 1001;
+      background: linear-gradient(90deg,
+        rgba(255,107,53,.12) 0%,
+        rgba(247,147,30,.14) 50%,
+        rgba(255,107,53,.12) 100%);
+      border-bottom: 1px solid rgba(247,147,30,.25);
+      padding: 10px 52px;
+      text-align: center;
+      font-size: .83rem;
+      color: var(--amber);
+      transition: max-height .35s ease, opacity .35s ease, padding .35s ease;
+      max-height: 60px;
+      overflow: hidden;
+    }
+    #notif-bar a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+    #notif-close {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--muted); cursor: pointer;
+      font-size: 1.2rem; line-height: 1; padding: 6px 8px; border-radius: 4px;
+      transition: var(--ease);
+    }
+    #notif-close:hover { color: var(--text); background: rgba(255,255,255,.07); }
+
+    /* ── NAV ─────────────────────────────────────────────── */
+    #nav {
+      position: sticky; top: 0; z-index: 1000;
+      height: 62px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 var(--pad);
+      background: rgba(13,13,15,.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow var(--ease);
+    }
+    #nav.scrolled { box-shadow: 0 4px 40px rgba(0,0,0,.45); }
+
+    .logo {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 1.25rem; font-weight: 800; letter-spacing: -.5px;
+      text-decoration: none; color: var(--text);
+    }
+    .logo-flame { font-size: 1.45rem; animation: flicker 2.2s ease-in-out infinite alternate; }
+    @keyframes flicker {
+      0%   { transform: scale(1) rotate(-2deg); filter: brightness(1); }
+      60%  { transform: scale(1.1) rotate(1.5deg); filter: brightness(1.25); }
+      100% { transform: scale(1.04) rotate(-1deg); filter: brightness(.95); }
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 30px; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: .88rem;
+      font-weight: 500; transition: color var(--ease);
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--fire) !important;
+      color: #000 !important; padding: 8px 18px !important;
+      border-radius: 8px; font-weight: 700 !important;
+      box-shadow: 0 0 22px rgba(255,107,53,.3);
+      transition: transform var(--ease), box-shadow var(--ease) !important;
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 36px rgba(255,107,53,.5) !important; }
+
+    /* hamburger */
+    #hbg {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    #hbg span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: var(--ease); }
+    #hbg.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    #hbg.open span:nth-child(2) { opacity: 0; }
+    #hbg.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    #mob-menu {
+      display: none; position: fixed; top: 62px; left: 0; right: 0;
+      background: rgba(13,13,15,.97); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px 28px; z-index: 999;
+      flex-direction: column; gap: 4px;
+    }
+    #mob-menu.open { display: flex; }
+    #mob-menu a {
+      color: var(--text); text-decoration: none; font-size: 1rem;
+      font-weight: 500; padding: 12px 0; border-bottom: 1px solid var(--border);
+      display: block;
+    }
+    #mob-menu a:last-child { border-bottom: none; margin-top: 8px; text-align: center; padding: 12px; border-radius: 8px; }
+
+    /* ── HERO ─────────────────────────────────────────────── */
+    #hero {
+      position: relative; overflow: hidden;
+      min-height: calc(100vh - 62px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 80px var(--pad) 80px;
+    }
+
+    /* radial fire glow */
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 65% 55% at 50% 90%, rgba(255,107,53,.13) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 35% at 50% 100%, rgba(247,147,30,.09) 0%, transparent 60%);
+    }
+    /* grid overlay */
+    #hero::after {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, #000 20%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, #000 20%, transparent 80%);
+    }
+
+    #particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+
+    .ember {
+      position: absolute; border-radius: 50%; opacity: 0;
+      animation: rise linear infinite;
+    }
+    @keyframes rise {
+      0%   { transform: translateY(0)      translateX(0)              scale(1);   opacity: 0; }
+      8%   { opacity: 1; }
+      85%  { opacity: .5; }
+      100% { transform: translateY(-110vh) translateX(var(--x-drift)) scale(.15); opacity: 0; }
+    }
+
+    .hero-badge {
+      position: relative; z-index: 1;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,107,53,.1); border: 1px solid rgba(255,107,53,.3);
+      color: var(--amber); font-size: .75rem; font-weight: 700;
+      padding: 5px 14px; border-radius: 100px;
+      letter-spacing: .8px; text-transform: uppercase; margin-bottom: 26px;
+    }
+    .badge-dot {
+      width: 6px; height: 6px; background: var(--amber);
+      border-radius: 50%; animation: blink 2s ease infinite;
+    }
+    @keyframes blink {
+      0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(247,147,30,.5); }
+      50%      { opacity:.7; box-shadow: 0 0 0 5px rgba(247,147,30,0); }
+    }
+
+    .hero-h1 {
+      position: relative; z-index: 1;
+      font-size: clamp(2.8rem, 7.5vw, 5.4rem);
+      font-weight: 900; letter-spacing: -2.5px; line-height: 1.04;
+      margin-bottom: 22px;
+    }
+
+    .hero-sub {
+      position: relative; z-index: 1;
+      font-size: clamp(.95rem, 1.8vw, 1.18rem);
+      color: var(--muted); max-width: 580px; margin: 0 auto 38px;
+      line-height: 1.75;
+    }
+
+    .hero-btns {
+      position: relative; z-index: 1;
+      display: flex; gap: 14px; flex-wrap: wrap;
+      align-items: center; justify-content: center;
+    }
+
+    .btn-fire {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--fire); color: #000;
+      font-size: .97rem; font-weight: 700;
+      padding: 13px 30px; border-radius: 10px; border: none;
+      cursor: pointer; text-decoration: none;
+      box-shadow: 0 0 42px rgba(255,107,53,.38), 0 4px 16px rgba(0,0,0,.3);
+      transition: transform var(--ease), box-shadow var(--ease);
+      position: relative; overflow: hidden;
+    }
+    .btn-fire::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.18), transparent 55%);
+      opacity: 0; transition: opacity var(--ease);
+    }
+    .btn-fire:hover { transform: translateY(-2px); box-shadow: 0 0 64px rgba(255,107,53,.55), 0 8px 28px rgba(0,0,0,.4); }
+    .btn-fire:hover::after { opacity: 1; }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: transparent; color: var(--muted);
+      font-size: .97rem; font-weight: 600;
+      padding: 13px 22px; border-radius: 10px;
+      border: 1px solid var(--border);
+      cursor: pointer; text-decoration: none;
+      transition: color var(--ease), border-color var(--ease), background var(--ease);
+    }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.04); }
+
+    .hero-stats {
+      position: relative; z-index: 1;
+      display: flex; gap: 0; margin-top: 58px;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .hstat {
+      text-align: center; padding: 0 36px;
+      border-right: 1px solid var(--border);
+    }
+    .hstat:first-child { padding-left: 0; }
+    .hstat:last-child  { padding-right: 0; border-right: none; }
+    .hstat-n { font-size: 1.9rem; font-weight: 800; line-height: 1; }
+    .hstat-l { font-size: .72rem; color: var(--subtle); text-transform: uppercase; letter-spacing: .8px; margin-top: 4px; }
+
+    /* ── FEATURES ─────────────────────────────────────────── */
+    #features {
+      padding: 96px var(--pad);
+      background: var(--bg-elev);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 34px 30px;
+      position: relative; overflow: hidden;
+      transition: transform var(--ease), border-color var(--ease), box-shadow var(--ease);
+      cursor: default;
+    }
+    .card::before {
+      content: ''; position: absolute; inset: 0; background: var(--fire);
+      opacity: 0; border-radius: inherit; transition: opacity var(--ease);
+    }
+    /* top glow line */
+    .card::after {
+      content: ''; position: absolute; top: 0; left: 15%; right: 15%; height: 1px;
+      background: var(--fire); opacity: 0; transition: opacity var(--ease);
+    }
+    .card:hover { transform: translateY(-5px); border-color: rgba(255,107,53,.35); box-shadow: 0 20px 56px rgba(0,0,0,.4), 0 0 28px rgba(255,107,53,.1); }
+    .card:hover::before { opacity: .04; }
+    .card:hover::after  { opacity: 1; }
+
+    .card-icon { font-size: 2.4rem; margin-bottom: 18px; display: block; position: relative; z-index: 1; }
+    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; position: relative; z-index: 1; }
+    .card-desc { font-size: .88rem; color: var(--muted); line-height: 1.7; position: relative; z-index: 1; }
+
+    /* ── HOW IT WORKS ────────────────────────────────────── */
+    #how { padding: 96px var(--pad); }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr 48px 1fr 48px 1fr;
+      align-items: start;
+      gap: 0;
+    }
+
+    .step { text-align: center; padding: 0 12px; }
+
+    .step-orb-wrap { display: inline-flex; position: relative; margin-bottom: 22px; }
+    .step-orb {
+      width: 78px; height: 78px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.9rem;
+      background: var(--bg-card);
+      border: 2px solid rgba(255,107,53,.28);
+      box-shadow: 0 0 28px rgba(255,107,53,.12), inset 0 0 28px rgba(255,107,53,.05);
+      transition: border-color var(--ease), box-shadow var(--ease), transform var(--ease);
+    }
+    .step:hover .step-orb {
+      border-color: rgba(255,107,53,.7);
+      box-shadow: 0 0 48px rgba(255,107,53,.3), inset 0 0 28px rgba(255,107,53,.1);
+      transform: scale(1.07);
+    }
+    .step-num {
+      position: absolute; top: -3px; right: -3px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--fire); color: #000;
+      font-size: .62rem; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .step-desc  { font-size: .85rem; color: var(--muted); line-height: 1.65; }
+
+    .arrow-col {
+      display: flex; align-items: flex-start; justify-content: center;
+      padding-top: 38px;
+    }
+    .arrow-col svg { color: rgba(255,107,53,.38); width: 44px; flex-shrink: 0; }
+
+    /* ── SOCIAL PROOF ────────────────────────────────────── */
+    #social {
+      padding: 64px var(--pad);
+      background: var(--bg-elev);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .trusted-lbl {
+      text-align: center; font-size: .72rem; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--subtle); margin-bottom: 30px;
+    }
+
+    .partner-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 44px; flex-wrap: wrap;
+    }
+    .partner {
+      display: flex; align-items: center; gap: 9px;
+      color: rgba(255,255,255,.25); font-size: .88rem; font-weight: 600;
+      transition: color var(--ease);
+    }
+    .partner:hover { color: rgba(255,255,255,.55); }
+    .partner-ico {
+      width: 30px; height: 30px; border-radius: 6px;
+      background: rgba(255,255,255,.05);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .95rem;
+    }
+
+    .testi-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 18px;
+      margin-top: 44px;
+    }
+    .testi {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 22px 24px;
+    }
+    .testi-q {
+      font-size: .875rem; color: var(--muted); line-height: 1.7;
+      font-style: italic; margin-bottom: 14px;
+    }
+    .testi-name { font-size: .8rem; font-weight: 700; }
+    .testi-role { font-size: .74rem; color: var(--subtle); }
+    .testi-stars { color: var(--gold); font-size: .8rem; margin-bottom: 10px; }
+
+    /* ── WAITLIST ────────────────────────────────────────── */
+    #waitlist {
+      padding: 96px var(--pad);
+      position: relative; overflow: hidden;
+    }
+    #waitlist::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 65% 60% at 50% 50%, rgba(255,107,53,.07) 0%, transparent 70%);
+    }
+
+    .wl-inner {
+      max-width: 660px; margin: 0 auto; text-align: center; position: relative; z-index: 1;
+    }
+    .wl-title {
+      font-size: clamp(1.75rem, 4vw, 2.65rem);
+      font-weight: 900; letter-spacing: -1px; line-height: 1.13; margin-bottom: 14px;
+    }
+    .wl-sub {
+      font-size: 1.02rem; color: var(--muted); line-height: 1.75; margin-bottom: 44px;
+    }
+
+    /* Tally wrapper */
+    #tally-form {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,107,53,.25);
+      border-radius: var(--r-lg);
+      padding: 44px 32px;
+      box-shadow: 0 0 64px rgba(255,107,53,.07);
+    }
+    /* TODO: Replace everything inside #tally-form with your Tally iframe once ready:
+       <iframe data-tally-src="https://tally.so/embed/YOUR_FORM_ID"
+               loading="lazy" width="100%" height="400" frameborder="0"
+               marginheight="0" marginwidth="0"
+               title="PyraTechAI Waitlist"></iframe>
+    */
+    .tally-note { font-size: .85rem; color: var(--muted); margin-bottom: 22px; }
+
+    .wl-form {
+      display: flex; gap: 10px; max-width: 460px; margin: 0 auto;
+    }
+    .wl-input {
+      flex: 1; background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 8px; padding: 12px 15px;
+      color: var(--text); font-size: .95rem; font-family: inherit;
+      outline: none; transition: border-color var(--ease), box-shadow var(--ease);
+    }
+    .wl-input:focus { border-color: rgba(255,107,53,.5); box-shadow: 0 0 0 3px rgba(255,107,53,.12); }
+    .wl-input::placeholder { color: var(--subtle); }
+    .wl-note { font-size: .72rem; color: var(--subtle); margin-top: 10px; }
+
+    .perks {
+      display: flex; gap: 20px; justify-content: center;
+      flex-wrap: wrap; margin-top: 30px;
+    }
+    .perk { display: flex; align-items: center; gap: 7px; font-size: .78rem; color: var(--muted); }
+    .perk::before { content: ''; width: 5px; height: 5px; background: var(--fire); border-radius: 50%; flex-shrink: 0; }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px var(--pad);
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 14px;
+    }
+    .foot-left { font-size: .83rem; color: var(--muted); }
+    .foot-icons { display: flex; gap: 10px; }
+    .foot-ico {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 7px;
+      background: rgba(255,255,255,.05); border: 1px solid var(--border);
+      color: var(--muted); text-decoration: none; font-size: .9rem;
+      transition: background var(--ease), border-color var(--ease), color var(--ease);
+    }
+    .foot-ico:hover { background: rgba(255,107,53,.1); border-color: rgba(255,107,53,.3); color: var(--amber); }
+    .foot-ico svg { width: 15px; height: 15px; fill: currentColor; }
+
+    /* ── BACK TO TOP ─────────────────────────────────────── */
+    #btt {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--fire); border: none; color: #000;
+      font-size: 1.1rem; font-weight: 700;
+      cursor: pointer; z-index: 980;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; transform: translateY(14px);
+      transition: opacity var(--ease), visibility var(--ease), transform var(--ease), box-shadow var(--ease);
+      box-shadow: 0 4px 22px rgba(255,107,53,.4);
+    }
+    #btt.show { opacity: 1; visibility: visible; transform: translateY(0); }
+    #btt:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(255,107,53,.6); }
+
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      #hbg { display: flex; }
+
+      .cards { grid-template-columns: 1fr; }
+      .testi-grid { grid-template-columns: 1fr; }
+
+      .steps {
+        grid-template-columns: 1fr;
+        max-width: 380px; margin: 0 auto;
+      }
+      .arrow-col { padding-top: 0; padding: 6px 0; }
+      .arrow-col svg { transform: rotate(90deg); }
+    }
+
+    @media (max-width: 600px) {
+      #hero, #features, #how, #social, #waitlist { padding-left: 20px; padding-right: 20px; }
+      footer { padding: 22px 20px; flex-direction: column; text-align: center; }
+      .hero-stats { gap: 0; }
+      .hstat { padding: 0 20px; }
+      .wl-form { flex-direction: column; }
+      .partner-row { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     NOTIFICATION BAR
+     TODO: Update the link href to your actual Tally form or signup URL
+════════════════════════════════════════════════════════════ -->
+<div id="notif-bar" role="banner">
+  🚀 We're in stealth mode. Join our early access list for priority onboarding.&nbsp;
+  <a href="#waitlist">Claim your spot →</a>
+  <button id="notif-close" aria-label="Dismiss notification">×</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════════════════════ -->
+<nav id="nav" role="navigation" aria-label="Main navigation">
+  <a href="#hero" class="logo">
+    <span class="logo-flame" aria-hidden="true">🔥</span>
+    <span>PyraTech<span class="g-text">AI</span></span>
+  </a>
+
+  <ul class="nav-links" role="list">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#social">Partners</a></li>
+    <li><a href="#waitlist" class="nav-cta">Join Waitlist</a></li>
+  </ul>
+
+  <button id="hbg" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mob-menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile nav -->
+<div id="mob-menu" role="navigation" aria-label="Mobile navigation">
+  <a href="#features"  class="mob-link">Features</a>
+  <a href="#how"       class="mob-link">How It Works</a>
+  <a href="#social"    class="mob-link">Early Partners</a>
+  <a href="#waitlist"  class="mob-link nav-cta">🔥 Join the Waitlist</a>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════════ -->
+<section id="hero">
+  <div id="particles" aria-hidden="true"></div>
+
+  <div class="hero-badge a0">
+    <div class="badge-dot" aria-hidden="true"></div>
+    Private Beta — Limited Spots
+  </div>
+
+  <h1 class="hero-h1 a1">
+    Forge Your<br>
+    <span class="g-text">Semantic Layer.</span><br>
+    Instantly.
+  </h1>
+
+  <p class="hero-sub a2">
+    Connect your schema. Our agentic AI discovers relationships, classifies metrics,
+    and exports Snowflake&nbsp;/&nbsp;Databricks YAML&nbsp;in&nbsp;seconds.
+  </p>
+
+  <div class="hero-btns a3">
+    <a href="#waitlist" class="btn-fire">🔥 Join the Waitlist</a>
+    <a href="#features" class="btn-ghost">See How It Works ↓</a>
+  </div>
+
+  <div class="hero-stats a4" role="list">
+    <div class="hstat" role="listitem">
+      <div class="hstat-n g-text">&lt;10s</div>
+      <div class="hstat-l">Schema Discovery</div>
+    </div>
+    <div class="hstat" role="listitem">
+      <div class="hstat-n g-text">100%</div>
+      <div class="hstat-l">Agentic</div>
+    </div>
+    <div class="hstat" role="listitem">
+      <div class="hstat-n g-text">∞</div>
+      <div class="hstat-l">Tables Supported</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     WHAT IT DOES
+════════════════════════════════════════════════════════════ -->
+<section id="features">
+  <div class="s-header center reveal">
+    <div class="section-label">What It Does</div>
+    <h2 class="section-title">
+      AI That Thinks Like a<br><span class="g-text">Data Architect</span>
+    </h2>
+    <p class="section-sub">
+      Stop hand-authoring YAML. PyraTechAI's agents explore, reason, and build your
+      semantic layer — then hand you a deploy-ready file.
+    </p>
+  </div>
+
+  <div class="cards">
+    <div class="card reveal d1">
+      <span class="card-icon" aria-hidden="true">🧠</span>
+      <h3 class="card-title">Agentic Discovery</h3>
+      <p class="card-desc">
+        Automatically scans your Snowflake or Databricks schema and builds a rich
+        knowledge graph — tables, columns, data types, cardinality, and implicit relationships.
+      </p>
+    </div>
+    <div class="card reveal d2">
+      <span class="card-icon" aria-hidden="true">🔗</span>
+      <h3 class="card-title">Smart Suggestions</h3>
+      <p class="card-desc">
+        AI suggests missing joins and derived measures you never wrote. Catch relationship
+        gaps before they become production dashboard bugs.
+      </p>
+    </div>
+    <div class="card reveal d3">
+      <span class="card-icon" aria-hidden="true">⚡</span>
+      <h3 class="card-title">One-Click Export</h3>
+      <p class="card-desc">
+        Generate ready-to-deploy YAML for Cortex Analyst, Databricks AI/BI, dbt Semantic
+        Layer, and more — no hand-editing ever required.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════════════════════ -->
+<section id="how">
+  <div class="s-header center reveal">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">
+      Three Steps to a<br><span class="g-text">Production Semantic Model</span>
+    </h2>
+  </div>
+
+  <div class="steps">
+    <!-- Step 1 -->
+    <div class="step reveal">
+      <div class="step-orb-wrap">
+        <div class="step-orb" aria-hidden="true">🔌</div>
+        <div class="step-num" aria-hidden="true">1</div>
+      </div>
+      <h3 class="step-title">Connect</h3>
+      <p class="step-desc">
+        Link your Snowflake or Databricks workspace in seconds.
+        We only read schema metadata — your data stays in your cloud.
+      </p>
+    </div>
+
+    <!-- Arrow -->
+    <div class="arrow-col reveal d1" aria-hidden="true">
+      <svg viewBox="0 0 44 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M2 10 H38 M32 4 L40 10 L32 16" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step reveal d1">
+      <div class="step-orb-wrap">
+        <div class="step-orb" aria-hidden="true">🤖</div>
+        <div class="step-num" aria-hidden="true">2</div>
+      </div>
+      <h3 class="step-title">AI Enriches</h3>
+      <p class="step-desc">
+        Agents classify columns, infer joins, suggest metrics, and flag
+        data quality issues across your entire knowledge graph.
+      </p>
+    </div>
+
+    <!-- Arrow -->
+    <div class="arrow-col reveal d2" aria-hidden="true">
+      <svg viewBox="0 0 44 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M2 10 H38 M32 4 L40 10 L32 16" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step reveal d2">
+      <div class="step-orb-wrap">
+        <div class="step-orb" aria-hidden="true">📦</div>
+        <div class="step-num" aria-hidden="true">3</div>
+      </div>
+      <h3 class="step-title">Export</h3>
+      <p class="step-desc">
+        Download your semantic YAML, push to Git, or deploy directly to
+        your BI or AI analytics stack — one click.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SOCIAL PROOF
+     TODO: Replace placeholder companies and quotes with real ones
+════════════════════════════════════════════════════════════ -->
+<section id="social">
+  <p class="trusted-lbl reveal">Trusted by early design partners</p>
+
+  <div class="partner-row reveal d1">
+    <!-- TODO: Replace each partner with real company names and logos -->
+    <div class="partner"><div class="partner-ico">🏢</div>Acme Analytics</div>
+    <div class="partner"><div class="partner-ico">📊</div>DataForge Co.</div>
+    <div class="partner"><div class="partner-ico">🚀</div>StratosBI</div>
+    <div class="partner"><div class="partner-ico">💡</div>Insight Labs</div>
+    <div class="partner"><div class="partner-ico">⚙️</div>MetricHive</div>
+  </div>
+
+  <div class="testi-grid">
+    <!-- TODO: Replace placeholder quotes with real testimonials from beta testers -->
+    <div class="testi reveal">
+      <div class="testi-stars" aria-label="5 stars">★★★★★</div>
+      <p class="testi-q">
+        "PyraTechAI cut our semantic model build from two weeks to an afternoon.
+        The agent found three missing joins we'd overlooked for months."
+      </p>
+      <!-- TODO: Replace name and role -->
+      <div class="testi-name">Alex M.</div>
+      <div class="testi-role">Head of Analytics, Acme Analytics</div>
+    </div>
+    <div class="testi reveal d1">
+      <div class="testi-stars" aria-label="5 stars">★★★★★</div>
+      <p class="testi-q">
+        "Finally a tool that speaks both Snowflake and Databricks fluently.
+        The YAML output was deploy-ready on the very first try."
+      </p>
+      <!-- TODO: Replace name and role -->
+      <div class="testi-name">Jordan K.</div>
+      <div class="testi-role">Data Platform Lead, DataForge Co.</div>
+    </div>
+    <div class="testi reveal d2">
+      <div class="testi-stars" aria-label="5 stars">★★★★★</div>
+      <p class="testi-q">
+        "The knowledge-graph view alone is worth it. We finally have a visual map
+        of every relationship in our warehouse."
+      </p>
+      <!-- TODO: Replace name and role -->
+      <div class="testi-name">Sam R.</div>
+      <div class="testi-role">Analytics Engineer, StratosBI</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     WAITLIST
+════════════════════════════════════════════════════════════ -->
+<section id="waitlist">
+  <div class="wl-inner">
+    <div class="section-label reveal">Limited Early Access</div>
+    <h2 class="wl-title reveal d1">
+      Secure Your Spot in the<br><span class="g-text">Semantic Revolution</span>
+    </h2>
+    <p class="wl-sub reveal d2">
+      We're opening access to a select group of data teams. Join the waitlist and get
+      priority onboarding, direct founder access, and a free Pro plan for&nbsp;6&nbsp;months.
+    </p>
+
+    <!--
+    ╔══════════════════════════════════════════════════════╗
+    ║  TALLY FORM — HOW TO REPLACE THIS PLACEHOLDER       ║
+    ║                                                      ║
+    ║  1. Go to tally.so → create your waitlist form       ║
+    ║  2. Click Share → Embed → copy the iframe snippet    ║
+    ║  3. In <head>, add:                                  ║
+    ║       <script async                                  ║
+    ║         src="https://tally.so/widgets/embed.js">    ║
+    ║       </script>                                      ║
+    ║  4. Replace the entire #tally-form div below with:   ║
+    ║       <iframe                                        ║
+    ║         data-tally-src="https://tally.so/embed/ID"  ║
+    ║         loading="lazy" width="100%" height="420"     ║
+    ║         frameborder="0"                              ║
+    ║         title="PyraTechAI Waitlist">                 ║
+    ║       </iframe>                                      ║
+    ╚══════════════════════════════════════════════════════╝
+    -->
+    <div id="tally-form" class="reveal d2">
+      <p class="tally-note">🔥 Be among the first to ignite your semantic layer.</p>
+      <!-- Fallback form — remove once Tally is wired up -->
+      <form class="wl-form" id="wl-form" novalidate>
+        <input
+          id="wl-email"
+          class="wl-input"
+          type="email"
+          placeholder="you@company.com"
+          required
+          aria-label="Work email address"
+          autocomplete="email"
+        />
+        <button type="submit" class="btn-fire" style="white-space:nowrap;padding:12px 22px;">
+          Get Early Access
+        </button>
+      </form>
+      <p class="wl-note">No spam. No credit card. Unsubscribe anytime.</p>
+    </div>
+
+    <div class="perks reveal d3">
+      <span class="perk">Priority onboarding</span>
+      <span class="perk">Direct founder access</span>
+      <span class="perk">Free Pro · 6 months</span>
+      <span class="perk">Shape the roadmap</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     FOOTER
+     TODO: Replace href="#" with real LinkedIn / Twitter / GitHub URLs
+════════════════════════════════════════════════════════════ -->
+<footer role="contentinfo">
+  <div class="foot-left">
+    Built with 🔥 by <strong><span class="g-text">PyraTechAI</span></strong>
+    &nbsp;·&nbsp; © 2025 All rights reserved.
+  </div>
+  <div class="foot-icons">
+    <!-- LinkedIn — TODO: replace href -->
+    <a href="#" class="foot-ico" aria-label="LinkedIn" rel="noopener noreferrer" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+    </a>
+    <!-- Twitter/X — TODO: replace href -->
+    <a href="#" class="foot-ico" aria-label="X / Twitter" rel="noopener noreferrer" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+    <!-- GitHub — TODO: replace href -->
+    <a href="#" class="foot-ico" aria-label="GitHub" rel="noopener noreferrer" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+    </a>
+  </div>
+</footer>
+
+<!-- Back to top -->
+<button id="btt" aria-label="Scroll back to top">↑</button>
+
+<!-- ══════════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── Notification bar dismiss ───────────────────────────── */
+  const bar   = document.getElementById('notif-bar');
+  const close = document.getElementById('notif-close');
+
+  // Restore previous dismissal within the session
+  if (sessionStorage.getItem('notif-dismissed')) bar.style.display = 'none';
+
+  close.addEventListener('click', () => {
+    bar.style.transition = 'max-height .35s ease, opacity .35s ease, padding .35s ease';
+    bar.style.maxHeight  = '0';
+    bar.style.opacity    = '0';
+    bar.style.padding    = '0';
+    setTimeout(() => { bar.style.display = 'none'; }, 380);
+    try { sessionStorage.setItem('notif-dismissed', '1'); } catch (_) {}
+  });
+
+  /* ── Hamburger / mobile menu ─────────────────────────────── */
+  const hbg  = document.getElementById('hbg');
+  const mob  = document.getElementById('mob-menu');
+
+  hbg.addEventListener('click', () => {
+    const open = mob.classList.toggle('open');
+    hbg.classList.toggle('open', open);
+    hbg.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  document.querySelectorAll('.mob-link').forEach(a => {
+    a.addEventListener('click', () => {
+      mob.classList.remove('open');
+      hbg.classList.remove('open');
+      hbg.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  /* ── Nav scroll shadow ────────────────────────────────────── */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  /* ── Back to top ─────────────────────────────────────────── */
+  const btt = document.getElementById('btt');
+  window.addEventListener('scroll', () => {
+    btt.classList.toggle('show', window.scrollY > 380);
+  }, { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ── Ember particles ─────────────────────────────────────── */
+  const container = document.getElementById('particles');
+  const palette   = ['#FF6B35','#F7931E','#FFD700','#FF8C42','#FFC93C','#FF5722'];
+
+  for (let i = 0; i < 38; i++) {
+    const e        = document.createElement('div');
+    const size     = Math.random() * 5 + 2;        // 2–7 px
+    const duration = (Math.random() * 9 + 5).toFixed(2); // 5–14 s
+    const delay    = -(Math.random() * 12).toFixed(2);    // stagger start
+    const left     = (Math.random() * 100).toFixed(2);
+    const drift    = ((Math.random() - .5) * 130).toFixed(0);
+    const color    = palette[Math.floor(Math.random() * palette.length)];
+    const blur     = Math.random() > .55 ? `blur(${(Math.random() * 1.5).toFixed(1)}px)` : 'none';
+
+    e.className = 'ember';
+    e.style.cssText = [
+      `width:${size}px`,
+      `height:${size}px`,
+      `left:${left}%`,
+      `bottom:-8px`,
+      `background:${color}`,
+      `box-shadow:0 0 ${size * 2}px ${color},0 0 ${size * 4}px ${color}80`,
+      `animation-duration:${duration}s`,
+      `animation-delay:${delay}s`,
+      `filter:${blur}`,
+      `--x-drift:${drift}px`,
+    ].join(';');
+
+    container.appendChild(e);
+  }
+
+  /* ── Reveal on scroll (IntersectionObserver) ─────────────── */
+  const observer = new IntersectionObserver(
+    entries => entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target); }
+    }),
+    { threshold: 0.1, rootMargin: '0px 0px -36px 0px' }
+  );
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ── Waitlist form (fallback) ─────────────────────────────── */
+  /* TODO: Remove this entire block once you've replaced #tally-form with the real Tally embed */
+  const form = document.getElementById('wl-form');
+  if (form) {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const email = document.getElementById('wl-email').value.trim();
+      if (!email) return;
+
+      const btn = form.querySelector('button[type="submit"]');
+      btn.textContent    = '🎉 You\'re on the list!';
+      btn.style.background  = 'linear-gradient(135deg,#22c55e,#16a34a)';
+      btn.style.boxShadow   = '0 0 30px rgba(34,197,94,.4)';
+      btn.disabled          = true;
+      form.querySelector('input').disabled = true;
+
+      /*
+       * TODO: Wire to your backend / Airtable / Mailchimp / etc.
+       * Example (uncomment and configure):
+       *
+       * fetch('/api/waitlist', {
+       *   method: 'POST',
+       *   headers: { 'Content-Type': 'application/json' },
+       *   body: JSON.stringify({ email })
+       * }).catch(console.error);
+       */
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
