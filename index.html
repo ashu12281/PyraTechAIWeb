@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PyraTechAI — Forge Your Semantic Layer</title>
-  <meta name="description" content="Connect your schema. Our agentic AI discovers relationships, classifies metrics, and exports Snowflake/Databricks YAML in seconds." />
+  <meta name="description" content="Forge semantic layers across platforms in one click. PyraTechAI's agentic AI generates deploy-ready semantic models for Snowflake, Databricks, dbt, and the OSI standard — instantly." />
   <!-- TODO: Add Tally embed script here when ready:
        <script async src="https://tally.so/widgets/embed.js"></script> -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -494,12 +494,66 @@
     #btt.show { opacity: 1; visibility: visible; transform: translateY(0); }
     #btt:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(255,107,53,.6); }
 
+    /* ── 4-COL FEATURES GRID ─────────────────────────────── */
+    .cards-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    /* ── VS / COMPARISON SECTION ─────────────────────────── */
+    #vs {
+      padding: 96px var(--pad);
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .vs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .vs-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 30px 26px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--ease), box-shadow var(--ease);
+    }
+    .vs-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: var(--fire);
+      opacity: 0.45;
+    }
+    .vs-card:hover {
+      border-color: rgba(255,107,53,.3);
+      box-shadow: 0 8px 36px rgba(0,0,0,.35);
+    }
+    .vs-label {
+      font-size: .7rem; font-weight: 700; letter-spacing: 1.8px;
+      text-transform: uppercase; color: var(--orange); margin-bottom: 8px;
+    }
+    .vs-title {
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 9px; line-height: 1.4;
+    }
+    .vs-desc { font-size: .85rem; color: var(--muted); line-height: 1.68; }
+
     /* ── RESPONSIVE ──────────────────────────────────────── */
-    @media (max-width: 900px) {
+    @media (max-width: 768px) {
       .nav-links { display: none; }
       #hbg { display: flex; }
 
       .cards { grid-template-columns: 1fr; }
+      .cards-4 { grid-template-columns: repeat(2, 1fr); }
+      .vs-grid { grid-template-columns: 1fr; }
       .steps {
         grid-template-columns: 1fr;
         max-width: 380px; margin: 0 auto;
@@ -509,10 +563,11 @@
     }
 
     @media (max-width: 600px) {
-      #hero, #features, #how, #waitlist { padding-left: 20px; padding-right: 20px; }
+      #hero, #features, #how, #vs, #waitlist { padding-left: 20px; padding-right: 20px; }
       footer { padding: 22px 20px; flex-direction: column; text-align: center; }
       .hero-stats { gap: 0; }
       .hstat { padding: 0 20px; }
+      .cards-4 { grid-template-columns: 1fr; }
       .wl-form { flex-direction: column; }
       .partner-row { gap: 24px; }
     }
@@ -525,7 +580,7 @@
      TODO: Update the link href to your actual Tally form or signup URL
 ════════════════════════════════════════════════════════════ -->
 <div id="notif-bar" role="banner">
-  🚀 We're in stealth mode. Join our early access list for priority onboarding.&nbsp;
+  🎉 We're live on Product Hunt today — upvote us and claim your early access spot!&nbsp;
   <a href="#waitlist">Claim your spot →</a>
   <button id="notif-close" aria-label="Dismiss notification">×</button>
 </div>
@@ -565,18 +620,18 @@
 
   <div class="hero-badge a0">
     <div class="badge-dot" aria-hidden="true"></div>
-    Private Beta — Limited Spots
+    Now Live on Product Hunt 🔥
   </div>
 
   <h1 class="hero-h1 a1">
-    Forge Your<br>
-    <span class="g-text">Semantic Layer.</span><br>
-    Instantly.
+    The Universal<br>
+    <span class="g-text">Semantic Layer.</span>
   </h1>
 
   <p class="hero-sub a2">
-    Connect your schema. Our agentic AI discovers relationships, classifies metrics,
-    and exports Snowflake&nbsp;/&nbsp;Databricks YAML&nbsp;in&nbsp;seconds.
+    One truth, every data platform. Connect any warehouse, define metrics once,
+    and query everywhere — Snowflake, Databricks, BigQuery, dbt,
+    and&nbsp;10+&nbsp;more.
   </p>
 
   <div class="hero-btns a3">
@@ -586,16 +641,16 @@
 
   <div class="hero-stats a4" role="list">
     <div class="hstat" role="listitem">
-      <div class="hstat-n g-text">&lt;10s</div>
-      <div class="hstat-l">Schema Discovery</div>
+      <div class="hstat-n g-text">10+</div>
+      <div class="hstat-l">Native Connectors</div>
+    </div>
+    <div class="hstat" role="listitem">
+      <div class="hstat-n g-text">6</div>
+      <div class="hstat-l">Export Formats</div>
     </div>
     <div class="hstat" role="listitem">
       <div class="hstat-n g-text">100%</div>
       <div class="hstat-l">Agentic</div>
-    </div>
-    <div class="hstat" role="listitem">
-      <div class="hstat-n g-text">∞</div>
-      <div class="hstat-l">Tables Supported</div>
     </div>
   </div>
 </section>
@@ -605,39 +660,79 @@
 ════════════════════════════════════════════════════════════ -->
 <section id="features">
   <div class="s-header center reveal">
-    <div class="section-label">What It Does</div>
+    <div class="section-label">Full Platform</div>
     <h2 class="section-title">
-      AI That Thinks Like a<br><span class="g-text">Data Architect</span>
+      Everything Your Semantic<br><span class="g-text">Layer Will Ever Need</span>
     </h2>
     <p class="section-sub">
-      Stop hand-authoring YAML. PyraTechAI's agents explore, reason, and build your
-      semantic layer — then hand you a deploy-ready file.
+      From connectivity to governance, PyraTechAI is the complete platform for
+      unified metrics across every data stack — no hand-authoring, no lock-in.
     </p>
   </div>
 
-  <div class="cards">
+  <div class="cards-4">
     <div class="card reveal d1">
-      <span class="card-icon" aria-hidden="true">🧠</span>
-      <h3 class="card-title">Agentic Discovery</h3>
+      <span class="card-icon" aria-hidden="true">🔌</span>
+      <h3 class="card-title">Universal Connectivity</h3>
       <p class="card-desc">
-        Automatically scans your Snowflake or Databricks schema and builds a rich
-        knowledge graph — tables, columns, data types, cardinality, and implicit relationships.
+        10+ native connectors — Snowflake, Databricks, BigQuery, Redshift, PostgreSQL,
+        MySQL, Synapse, Teradata, and more. Unify multiple sources into one semantic graph.
       </p>
     </div>
     <div class="card reveal d2">
-      <span class="card-icon" aria-hidden="true">🔗</span>
-      <h3 class="card-title">Smart Suggestions</h3>
+      <span class="card-icon" aria-hidden="true">🤖</span>
+      <h3 class="card-title">AI-Powered Modeling</h3>
       <p class="card-desc">
-        AI suggests missing joins and derived measures you never wrote. Catch relationship
-        gaps before they become production dashboard bugs.
+        GPT-4o auto-classifies columns into measures, dimensions, and time dimensions.
+        Natural language → SQL, no query knowledge needed. Self-healing detects and fixes broken metrics automatically.
       </p>
     </div>
     <div class="card reveal d3">
-      <span class="card-icon" aria-hidden="true">⚡</span>
-      <h3 class="card-title">One-Click Export</h3>
+      <span class="card-icon" aria-hidden="true">🕸️</span>
+      <h3 class="card-title">Graph-Native Lineage</h3>
       <p class="card-desc">
-        Generate ready-to-deploy YAML for Cortex Analyst, Databricks AI/BI, dbt Semantic
-        Layer, and more — no hand-editing ever required.
+        Know exactly what breaks before you change a column. Full end-to-end lineage
+        from raw column → metric → certified report, across your entire data graph.
+      </p>
+    </div>
+    <div class="card reveal d3">
+      <span class="card-icon" aria-hidden="true">🛡️</span>
+      <h3 class="card-title">Enterprise Governance</h3>
+      <p class="card-desc">
+        Metric certification, ownership, and domain assignment. Approval workflows:
+        Pending → Review → Approved → Deployed. Full model versioning with dev / staging / production promotion.
+      </p>
+    </div>
+    <div class="card reveal d1">
+      <span class="card-icon" aria-hidden="true">⏱️</span>
+      <h3 class="card-title">Time Intelligence</h3>
+      <p class="card-desc">
+        Period-over-Period, YTD, MTD, QTD, Rolling Windows, Same Period Last Year —
+        out of the box, across all platforms, without writing a single SQL date function.
+      </p>
+    </div>
+    <div class="card reveal d2">
+      <span class="card-icon" aria-hidden="true">📊</span>
+      <h3 class="card-title">Trust &amp; Observability</h3>
+      <p class="card-desc">
+        Composite trust score (0–100) per metric: certification + freshness + quality +
+        consumers. Query latency, cache hit rate, cost, and error analysis — all tracked.
+      </p>
+    </div>
+    <div class="card reveal d3">
+      <span class="card-icon" aria-hidden="true">🚀</span>
+      <h3 class="card-title">Multi-Platform Export</h3>
+      <p class="card-desc">
+        One click to Snowflake Cortex, dbt Semantic Layer, Databricks AI/BI, Cube.dev,
+        LookML, and the OSI standard. PyraTechAI extends OSI to cover gaps no other tool does.
+      </p>
+    </div>
+    <div class="card reveal d3">
+      <span class="card-icon" aria-hidden="true">💰</span>
+      <h3 class="card-title">Cost Transparency</h3>
+      <p class="card-desc">
+        Pre-query cost estimation before execution. Per-user and per-team budget limits
+        with alerts. Know the cost before you pay it.
       </p>
     </div>
   </div>
@@ -705,6 +800,57 @@
       <p class="step-desc">
         Download your semantic YAML, push to Git, or deploy directly to
         your BI or AI analytics stack — one click.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     WHY PYRATECHAI
+════════════════════════════════════════════════════════════ -->
+<section id="vs">
+  <div class="s-header center reveal">
+    <div class="section-label">Why PyraTechAI</div>
+    <h2 class="section-title">
+      The Last Semantic Layer<br><span class="g-text">You'll Ever Need</span>
+    </h2>
+    <p class="section-sub">
+      Platform-agnostic, AI-native, and enterprise-ready from day one.
+      Here's how we stack up.
+    </p>
+  </div>
+
+  <div class="vs-grid">
+    <div class="vs-card reveal d1">
+      <div class="vs-label">vs. dbt / MetricFlow</div>
+      <h3 class="vs-title">Graph-native intelligence, not just YAML definitions</h3>
+      <p class="vs-desc">
+        dbt tells you what metrics are. PyraTechAI tells you what breaks when you
+        change them — with AI self-healing and composite trust scoring built in.
+      </p>
+    </div>
+    <div class="vs-card reveal d2">
+      <div class="vs-label">vs. Cube.dev</div>
+      <h3 class="vs-title">No JavaScript config files. Ever.</h3>
+      <p class="vs-desc">
+        Cube requires hand-authored schema files. PyraTechAI's agents discover your
+        schema, classify every column, and build the entire semantic model for you.
+      </p>
+    </div>
+    <div class="vs-card reveal d1">
+      <div class="vs-label">vs. Looker</div>
+      <h3 class="vs-title">Platform-agnostic, not BigQuery-first</h3>
+      <p class="vs-desc">
+        Looker is optimized for BigQuery and LookML lock-in. PyraTechAI works
+        equally across every warehouse — your semantic layer travels with your data.
+      </p>
+    </div>
+    <div class="vs-card reveal d2">
+      <div class="vs-label">vs. Snowflake Cortex</div>
+      <h3 class="vs-title">Every warehouse, not just one</h3>
+      <p class="vs-desc">
+        Cortex Analyst is powerful — inside Snowflake. PyraTechAI exports to Cortex
+        and 5 other platforms simultaneously, so you're never locked to a single cloud.
       </p>
     </div>
   </div>
@@ -780,7 +926,7 @@
 <footer role="contentinfo">
   <div class="foot-left">
     Built with 🔥 by <strong><span class="g-text">PyraTechAI</span></strong>
-    &nbsp;·&nbsp; © 2025 All rights reserved.
+    &nbsp;·&nbsp; © 2026 All rights reserved.
   </div>
   <div class="foot-icons">
     <!-- LinkedIn — TODO: replace href -->
@@ -832,7 +978,6 @@
     const open = mob.classList.toggle('open');
     hbg.classList.toggle('open', open);
     hbg.setAttribute('aria-expanded', String(open));
-    document.body.style.overflow = open ? 'hidden' : '';
   });
 
   document.querySelectorAll('.mob-link').forEach(a => {
@@ -840,7 +985,6 @@
       mob.classList.remove('open');
       hbg.classList.remove('open');
       hbg.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
     });
   });
 
